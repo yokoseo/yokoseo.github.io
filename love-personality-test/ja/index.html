@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💖恋愛性格診断テスト💖</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Yu Gothic', 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .quiz-container {
+            background: #fff;
+            padding: 30px 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            overflow-y: auto;
+        }
+        .quiz-container h1 {
+            margin-bottom: 20px;
+            color: #e75480;
+        }
+        .question {
+            margin: 15px 0;
+            text-align: left;
+            font-size: 1.1em;
+        }
+        .answers { margin-top: 5px; }
+        .answers label { margin-right: 15px; cursor: pointer; }
+        button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 10px;
+            background: #e75480;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background: #d6456e; }
+        #result { margin-top: 30px; text-align: left; }
+        #result h2 { color: #e75480; margin-bottom: 15px; }
+        .result-description { margin-top: 10px; }
+        .highlight { font-weight: bold; color: #444; }
+    </style>
+</head>
+<body>
+<div class="quiz-container">
+    <h1>💖恋愛性格診断テスト💖</h1>
+    <form id="quizForm">
+        <div id="questions"></div>
+        <button type="button" onclick="calculatePersonality()">診断する</button>
+    </form>
+    <div id="result"></div>
+</div>
+<script>
+    const questions = [
+        "好きな人ができたら、すぐにアプローチしますか？",
+        "一目惚れすることが多いですか？",
+        "毎日パートナーに連絡するのが好きですか？",
+        "パートナーと頻繁に会えなくても平気ですか？",
+        "恋愛では受け身になることが多いですか？",
+        "サプライズを計画するのが好きですか？",
+        "感情を率直に表現するのが得意ですか？",
+        "まず友達関係を築いてから恋愛に進みたいですか？",
+        "パートナーのSNSを頻繁にチェックしますか？",
+        "相手に束縛されることが苦手ですか？",
+        "記念日や特別な日を大切にしますか？",
+        "過去の恋愛を引きずることが多いですか？",
+        "恋愛に全力を尽くすタイプですか？",
+        "パートナー選びに高い基準を持っていますか？",
+        "ケンカを避けるために努力しますか？",
+        "恋愛前に相手の価値観を知りたいと思いますか？",
+        "駆け引きよりも正直さを重視しますか？",
+        "恋愛でドキドキ感を大切にしますか？",
+        "恋愛と結婚は別物だと思いますか？",
+        "安定して長続きする恋愛を望みますか？"
+    ];
+
+    const questionContainer = document.getElementById('questions');
+    questions.forEach((q, i) => {
+        questionContainer.innerHTML += `
+            <div class="question">
+                <p><strong>Q${i + 1}:</strong> ${q}</p>
+                <div class="answers">
+                    <label><input type="radio" name="q${i + 1}" value="yes" required> はい</label>
+                    <label><input type="radio" name="q${i + 1}" value="no" required> いいえ</label>
+                </div>
+            </div>`;
+    });
+
+    function calculatePersonality() {
+        const answers = Array.from({ length: 20 }, (_, i) => document.querySelector(`input[name="q${i + 1}"]:checked`))
+            .map(el => el?.value);
+        if (answers.includes(undefined)) return alert("全ての質問に答えてください。");
+
+        const yesIndexes = answers.map((ans, i) => ans === 'yes' ? i + 1 : 0).filter(i => i !== 0);
+        const personalityTypes = {
+            A: [1, 2, 7, 13, 18],
+            B: [5, 8, 10, 16, 20],
+            C: [3, 9, 12, 13, 15],
+            D: [4, 6, 10, 14, 19],
+            E: [3, 11, 15, 17, 18],
+            F: [4, 8, 14, 16, 19]
+        };
+        const scores = {A:0,B:0,C:0,D:0,E:0,F:0};
+        yesIndexes.forEach(num => {
+            for (const type in personalityTypes) {
+                if (personalityTypes[type].includes(num)) scores[type]++;
+            }
+        });
+
+        const maxScore = Math.max(...Object.values(scores));
+        const bestTypes = Object.entries(scores).filter(([_, v]) => v === maxScore).map(([k]) => k);
+
+        const descriptions = {
+            A: "💙情熱的で大胆なタイプ: 恋に落ちるのが早く、積極的にアプローチします。",
+            B: "💛慎重で友達関係重視のタイプ: 信頼関係を大切にし、安定した恋愛を求めます。",
+            C: "💜献身的で尽くすタイプ: 相手を思いやり、時に過去の恋愛を引きずることも。",
+            D: "💚自立して自由なタイプ: 自分の時間を大切にし、過干渉を嫌います。",
+            E: "🧡ロマンチックで夢見がちなタイプ: 特別な日を大切にし、理想の恋を追求します。",
+            F: "❤️現実的で合理的なタイプ: 恋愛と結婚を区別し、冷静に相手を選びます。"
+        };
+
+        const resultContainer = document.getElementById('result');
+        resultContainer.innerHTML = `<h2>あなたの恋愛タイプ：</h2>`;
+        bestTypes.forEach(type => {
+            resultContainer.innerHTML += `<h3 class="highlight">${descriptions[type]}</h3>`;
+        });
+    }
+</script>
+</body>
+</html>
