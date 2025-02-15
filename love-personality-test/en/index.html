@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Personality Test</title>
+    <style>
+        /* Basic Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background: #fff;
+            padding: 30px 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            overflow-y: auto;
+        }
+
+        .quiz-container h1 {
+            margin-bottom: 20px;
+            color: #e75480;
+        }
+
+        .question {
+            margin: 15px 0;
+            text-align: left;
+            font-size: 1.1em;
+        }
+
+        .answers {
+            margin-top: 5px;
+        }
+
+        .answers label {
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 10px;
+            background: #e75480;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #d6456e;
+        }
+
+        #result {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        #result h2 {
+            color: #e75480;
+            margin-bottom: 15px;
+        }
+
+        .result-description {
+            margin-top: 10px;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>💖 Love Personality Test 💖</h1>
+    <form id="quizForm">
+        <!-- Questions 1 to 20 -->
+        <div id="questions"></div>
+
+        <button type="button" onclick="calculatePersonality()">Submit</button>
+    </form>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    // Generate Questions
+    const questions = [
+        "When you like someone, do you approach them right away?",
+        "Do you often fall in love at first sight?",
+        "Do you prefer to text or call your partner every day?",
+        "Are you okay with not seeing your partner frequently?",
+        "Do you tend to take a passive role in relationships?",
+        "Do you enjoy planning surprises more than receiving them?",
+        "Do you prefer to express your feelings honestly and directly?",
+        "Do you like building a strong friendship before dating someone?",
+        "Do you check your partner’s social media often?",
+        "Do you dislike being controlled or controlling your partner?",
+        "Do you think anniversaries and special dates are important?",
+        "Do you often have trouble letting go of past relationships?",
+        "Do you like giving your all in a relationship?",
+        "Do you have high standards when choosing a partner?",
+        "Do you try to avoid fights in a relationship?",
+        "Do you want to understand your partner’s values before dating them?",
+        "Do you prefer honesty over playing mind games?",
+        "Do you want to feel excitement and butterflies in your relationship?",
+        "Do you believe love and marriage are two different things?",
+        "Do you want a long-lasting and stable relationship?"
+    ];
+
+    const questionContainer = document.getElementById('questions');
+    questions.forEach((q, index) => {
+        questionContainer.innerHTML += `
+            <div class="question">
+                <p><strong>Q${index + 1}:</strong> ${q}</p>
+                <div class="answers">
+                    <label>
+                        <input type="radio" name="q${index + 1}" value="yes" required> Yes
+                    </label>
+                    <label>
+                        <input type="radio" name="q${index + 1}" value="no" required> No
+                    </label>
+                </div>
+            </div>
+        `;
+    });
+
+    // Calculate Personality Type
+    function calculatePersonality() {
+        const answers = [];
+        for (let i = 1; i <= 20; i++) {
+            const selected = document.querySelector(`input[name="q${i}"]:checked`);
+            if (!selected) {
+                alert(`Please answer question ${i}.`);
+                return;
+            }
+            answers.push(selected.value);
+        }
+
+        const yesIndexes = answers.map((ans, i) => ans === 'yes' ? i + 1 : 0).filter(i => i !== 0);
+
+        // Personality Type Mappings
+        const personalityTypes = {
+            A: [1, 2, 7, 13, 18],
+            B: [5, 8, 10, 16, 20],
+            C: [3, 9, 12, 13, 15],
+            D: [4, 6, 10, 14, 19],
+            E: [3, 11, 15, 17, 18],
+            F: [4, 8, 14, 16, 19]
+        };
+
+        const scores = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
+
+        yesIndexes.forEach((answer) => {
+            for (const type in personalityTypes) {
+                if (personalityTypes[type].includes(answer)) {
+                    scores[type]++;
+                }
+            }
+        });
+
+        // Determine the highest score
+        const maxScore = Math.max(...Object.values(scores));
+        const bestTypes = Object.keys(scores).filter(type => scores[type] === maxScore);
+
+        const personalityDescriptions = {
+            A: {
+                title: "💙 Passionate & Bold Type",
+                desc: `🔥 You fall in love quickly and go after what you want.<br>
+                🔥 You prefer to be direct rather than playing games.<br>
+                🔥 You value excitement and emotional intensity in love.`
+            },
+            B: {
+                title: "💛 Cautious & Friendship-Based Type",
+                desc: `🌱 You take time to develop feelings and build trust.<br>
+                🌱 You prioritize emotional stability and shared values.<br>
+                🌱 You prefer relationships that provide security and comfort.`
+            },
+            C: {
+                title: "💜 Devoted but Overgiving Type",
+                desc: `💞 You are incredibly caring and tend to give your all.<br>
+                💞 You avoid controlling your partner but worry about them a lot.<br>
+                💞 You may struggle to move on from past relationships.`
+            },
+            D: {
+                title: "💚 Independent & Laid-Back Type",
+                desc: `🍃 You prioritize your personal space and freedom.<br>
+                🍃 You dislike excessive communication and restrictions.<br>
+                🍃 You have clear standards and do not settle easily.`
+            },
+            E: {
+                title: "🧡 Romantic & Dreamy Type",
+                desc: `✨ You love celebrating anniversaries and special moments.<br>
+                ✨ You enjoy surprises and idealistic love scenarios.<br>
+                ✨ You seek a love story that feels magical and unforgettable.`
+            },
+            F: {
+                title: "❤️ Realist & Practical Type",
+                desc: `🔎 You separate love from marriage and make rational choices.<br>
+                🔎 You carefully evaluate potential partners before committing.<br>
+                🔎 Sometimes, work or hobbies take priority over relationships.`
+            }
+        };
+
+        const resultContainer = document.getElementById('result');
+        resultContainer.innerHTML = `<h2>Your Love Personality Type:</h2>`;
+        bestTypes.forEach(type => {
+            resultContainer.innerHTML += `
+                <h3 class="highlight">${personalityDescriptions[type].title}</h3>
+                <p class="result-description">${personalityDescriptions[type].desc}</p>
+            `;
+        });
+    }
+</script>
+
+</body>
+</html>
