@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アモール Yoko Rose - スピリチュアル恋愛診断</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #FFB6C1, #FFE4E1);
+            color: #333;
+        }
+
+        .quiz-container {
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 90%;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #FF69B4;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        .question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #FF1493;
+        }
+
+        .btn-answer {
+            display: block;
+            margin: 10px auto;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background-color: #FF69B4;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+            width: 80%;
+        }
+
+        .btn-answer:hover {
+            background-color: #FF1493;
+        }
+
+        .result {
+            font-size: 1.2em;
+            margin-top: 20px;
+            text-align: left;
+            padding: 20px;
+            background-color: #FFF0F5;
+            border-radius: 10px;
+        }
+
+        .result-title {
+            color: #FF69B4;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .result-content {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="quiz-container" id="quiz">
+        <h1 class="title">アモール Yoko Rose</h1>
+        <p class="subtitle">🧘‍♀️スピリチュアル恋愛診断🧘‍♂️</p>
+        <p class="subtitle">あなたの魂が今、本当に求めている「愛のかたち」はどれ？</p>
+        <p class="question" id="question"></p>
+        <div id="options"></div>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        const quizData = {
+            question: "次のうち、あなたが一番心惹かれる「愛の在り方」はどれですか？",
+            options: [
+                "与える愛 – 自分から愛を注ぐことに喜びを感じる",
+                "求める愛 – 愛されていると感じて初めて安心できる",
+                "存在する愛 – 理由も条件もなく、ただ「ある」ことが愛だと感じる"
+            ],
+            interpretations: [
+                {
+                    title: "ハートチャクラが活性化中",
+                    content: "愛を外に流すことで自分を癒すタイプ。自分をもっと労わることで愛のエネルギーがより純粋になります。"
+                },
+                {
+                    title: "インナーチャイルドが愛を欲しがっています",
+                    content: "まずは自分自身を深く受け入れることから始めましょう。"
+                },
+                {
+                    title: "存在愛（causeless love）の領域に近づいています",
+                    content: "その感覚を信じ、瞑想や自然との対話を深めましょう。"
+                }
+            ]
+        };
+
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const resultElement = document.getElementById('result');
+
+        function loadQuestion() {
+            questionElement.textContent = quizData.question;
+            resultElement.innerHTML = '';
+
+            quizData.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.classList.add('btn-answer');
+                button.textContent = option;
+                button.addEventListener('click', () => showResult(index));
+                optionsElement.appendChild(button);
+            });
+        }
+
+        function showResult(index) {
+            document.querySelectorAll('.btn-answer').forEach(btn => btn.disabled = true);
+            
+            const interpretation = quizData.interpretations[index];
+            resultElement.innerHTML = `
+                <h2 class="result-title">${interpretation.title}</h2>
+                <div class="result-content">
+                    <p>${interpretation.content}</p>
+                </div>
+            `;
+        }
+
+        loadQuestion();
+    </script>
+</body>
+
+</html> 
